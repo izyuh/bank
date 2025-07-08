@@ -1,12 +1,17 @@
 
-      document.getElementById("loginForm").addEventListener("submit", () => {
+      const username = document.getElementById("username").value;
+      const password = document.getElementById("password").value;
+
+      document.getElementById("loginForm").addEventListener("submit", (e) => {
           e.preventDefault();
+          console.log("Login submitted for:", username);
+          
           fetch("/api/login", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-              username: document.getElementById("username").value,
-              password: document.getElementById("password").value,
+              username: username,
+              password: password
             }),
           })
             .then((res) => {
@@ -18,7 +23,9 @@
             .then((data) => {
               document.getElementById("result").innerText = data.message;
               if (data.success) {
-                // Optionally redirect or show logged-in UI
+                console.log(data.username, data.balance);
+                sessionStorage.setItem('currentUser', data.username);
+                sessionStorage.setItem('balance', data.balance);
               }
             })
             .catch((err) => {
@@ -26,9 +33,10 @@
                 "Login failed or server error.";
               console.error(err);
             });
+            window.location.href = "../HTML/Account.html";
         });
 
         document.getElementById("Create-Account").addEventListener("click", () => {
             console.log("clicked");
-            window.location.href = "/AccountCreation.html";
+            window.location.href = "../HTML/AccountCreation.html";
         })

@@ -2,16 +2,12 @@ package com.banking.bank;
 
 public class Account {
     private String hashedPassword;
-    private String salt;
     private double balance;
 
-    public Account(String hashedPassword, double balance, String salt) {
-        this.salt = salt;
+    public Account(String hashedPassword, double balance) {
         this.hashedPassword = hashedPassword;
         this.balance = balance;
     }
-
-    public String getSalt() {return salt;}
 
     public String getHashedPassword() {return hashedPassword;}
 
