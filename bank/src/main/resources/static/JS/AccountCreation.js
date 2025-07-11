@@ -30,10 +30,10 @@ document.getElementById("accountCreationForm").addEventListener("submit", (e) =>
 
         console.log("Success:", data);
         alert("Account created successfully!");
-        window.location.href = "/HTML/Account.html"; // Redirect to login page
+        window.location.href = "/HTML/Homepage.html";
     })
   .catch(error => {
         console.error("Error:", error);
-        alert("Failed to create account. Please try again.");
+        alert("Failed to create account. Please try again.aaaaaa");
     });
 });
