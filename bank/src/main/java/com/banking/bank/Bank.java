@@ -33,7 +33,7 @@ public class Bank {
             return false; // Username already exists
         }
         String hashedPassword = hashPassword(password);
-        accounts.put(username, new Account(hashedPassword, 0.0));
+        accounts.put(username, new Account(hashedPassword, 500.0));
         saveAccountsToFile();
         return true;
     }
@@ -42,6 +42,7 @@ public class Bank {
     public static boolean deposit(String username, double amount) {
         if (accounts.containsKey(username) && amount > 0) {
             accounts.get(username).addBalance(amount);
+            System.out.println(accounts.get(username).getBalance());
             saveAccountsToFile();
             return true;
         }
@@ -76,7 +77,6 @@ public class Bank {
             throw new RuntimeException("Error hashing password", e);
         }
     }
-
 
     private static void saveAccountsToFile() {
         System.out.println("Saving accounts to file...");

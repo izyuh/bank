@@ -36,4 +36,39 @@ public class BankController {
         
         return response;
     }
+
+    @PostMapping("/deposit")
+    public Map<String, Object> deposit(@RequestBody Map<String, String> depositDetails) {
+        String username = depositDetails.get("username");
+        double amount = Double.parseDouble(depositDetails.get("amount"));
+
+        boolean isDeposited = Bank.deposit(username,amount);
+
+        Map<String, Object> response = new HashMap<>();
+
+            response.put("success", isDeposited);
+            response.put("message", "Deposit successful");
+            response.put("balance", Bank.accounts.get(username).getBalance());
+
+        return response;
+    }
+
+    @PostMapping("/withdraw")
+    public Map<String, Object> withdraw(@RequestBody Map<String, String> withdrawDetails) {
+        String username = withdrawDetails.get("username");
+        double amount = Double.parseDouble(withdrawDetails.get("amount"));
+
+        boolean isWithdrawn = Bank.withdraw(username, amount);
+
+        Map<String, Object> response = new HashMap<>();
+
+            response.put("success", isWithdrawn);
+            response.put("message", isWithdrawn ? "Withdrawal successful" : "Insufficient funds or invalid amount");
+            response.put("balance", Bank.accounts.get(username) != null ? Bank.accounts.get(username).getBalance() : 0.0);
+
+        return response;
+        
+    }
+
+    
 }
