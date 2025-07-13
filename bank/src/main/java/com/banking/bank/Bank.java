@@ -2,6 +2,7 @@ package com.banking.bank;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
+import java.security.SecureRandom;
 import java.util.HexFormat;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -21,8 +22,9 @@ public class Bank {
     // Logic for login, now returns boolean
     public static boolean handleLogin(String username, String password) {
         if (accounts.containsKey(username)) {
-            String hashedPassword = hashPassword(password);
-            return accounts.get(username).getHashedPassword().equals(hashedPassword);
+            Account account = accounts.get(username);
+            String hashedPassword = hashPassword(password, account.getSalt());
+            return account.getHashedPassword().equals(hashedPassword);
         }
         return false;
     }
@@ -32,8 +34,9 @@ public class Bank {
         if (accounts.containsKey(username)) {
             return false; // Username already exists
         }
-        String hashedPassword = hashPassword(password);
-        accounts.put(username, new Account(hashedPassword, 500.0));
+        String salt = generateSalt();
+        String hashedPassword = hashPassword(password, salt);
+        accounts.put(username, new Account(hashedPassword, salt, 500.0));
         saveAccountsToFile();
         return true;
     }
@@ -67,15 +70,22 @@ public class Bank {
         return null;
     }
 
-    private static String hashPassword(String password) {
+    private static String hashPassword(String password, String salt) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            String saltedPassword = password;
+            String saltedPassword = salt + password;
             byte[] hashBytes = digest.digest(saltedPassword.getBytes(StandardCharsets.UTF_8));
             return HexFormat.of().formatHex(hashBytes);
         } catch (Exception e) {
             throw new RuntimeException("Error hashing password", e);
         }
+    }
+    
+    private static String generateSalt() {
+        SecureRandom random = new SecureRandom();
+        byte[] salt = new byte[16]; // 16 bytes = 128 bits
+        random.nextBytes(salt);
+        return HexFormat.of().formatHex(salt);
     }
 
     private static void saveAccountsToFile() {
@@ -84,7 +94,7 @@ public class Bank {
             for (Map.Entry<String, Account> entry : accounts.entrySet()) {
                 String username = entry.getKey();
                 Account acc = entry.getValue();
-                writer.println(username + "," + acc.getHashedPassword() + "," + acc.getBalance());
+                writer.println(username + "," + acc.getHashedPassword() + "," + acc.getSalt() + "," + acc.getBalance());
             }
         } catch (Exception e) {
             System.out.println("Error saving accounts: " + e.getMessage());
@@ -100,11 +110,19 @@ public class Bank {
             while (fileScanner.hasNextLine()) {
                 String line = fileScanner.nextLine();
                 String[] parts = line.split(",");
-                if (parts.length == 3) {
+                if (parts.length == 4) {
+                    String username = parts[0];
+                    String hashedPassword = parts[1];
+                    String salt = parts[2];
+                    double balance = Double.parseDouble(parts[3]);
+                    accounts.put(username, new Account(hashedPassword, salt, balance));
+                } else if (parts.length == 3) {
+                    // Handle old format without salt (for backward compatibility)
                     String username = parts[0];
                     String hashedPassword = parts[1];
                     double balance = Double.parseDouble(parts[2]);
-                    accounts.put(username, new Account(hashedPassword, balance));
+                    String salt = generateSalt(); // Generate new salt for existing accounts
+                    accounts.put(username, new Account(hashedPassword, salt, balance));
                 }
             }
         } catch (Exception e) {
