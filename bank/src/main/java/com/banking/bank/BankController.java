@@ -14,7 +14,6 @@ public class BankController {
 
         boolean isAuthenticated = Bank.handleLogin(username, password);
 
-
         Map<String, Object> response = new HashMap<>();
         response.put("success", isAuthenticated);
         response.put("message", isAuthenticated ? "Login successful" : "Invalid username or password");
@@ -28,12 +27,12 @@ public class BankController {
     public Map<String, Object> createAccount(@RequestBody Map<String, String> accountDetails) {
         String username = accountDetails.get("username");
         String password = accountDetails.get("password");
-        
+
         boolean isCreated = Bank.createAccount(username, password);
         Map<String, Object> response = new HashMap<>();
         response.put("success", isCreated);
         response.put("message", isCreated ? "Account created successfully" : "Username already exists");
-        
+
         return response;
     }
 
@@ -42,13 +41,13 @@ public class BankController {
         String username = depositDetails.get("username");
         double amount = Double.parseDouble(depositDetails.get("amount"));
 
-        boolean isDeposited = Bank.deposit(username,amount);
+        boolean isDeposited = Bank.deposit(username, amount);
 
         Map<String, Object> response = new HashMap<>();
 
-            response.put("success", isDeposited);
-            response.put("message", "Deposit successful");
-            response.put("balance", Bank.accounts.get(username).getBalance());
+        response.put("success", isDeposited);
+        response.put("message", "Deposit successful");
+        response.put("balance", Bank.accounts.get(username).getBalance());
 
         return response;
     }
@@ -62,13 +61,13 @@ public class BankController {
 
         Map<String, Object> response = new HashMap<>();
 
-            response.put("success", isWithdrawn);
-            response.put("message", isWithdrawn ? "Withdrawal successful" : "Insufficient funds or invalid amount");
-            response.put("balance", Bank.accounts.get(username) != null ? Bank.accounts.get(username).getBalance() : 0.0);
+        response.put("success", isWithdrawn);
+        response.put("message", isWithdrawn ? "Withdrawal successful" : "Insufficient funds or invalid amount");
+        response.put("balance", Bank.accounts.get(username) != null ? Bank.accounts.get(username).getBalance() : 0.0);
 
         return response;
-        
+
     }
 
-    
+
 }

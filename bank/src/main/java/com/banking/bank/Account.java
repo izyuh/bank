@@ -4,11 +4,17 @@ public class Account {
     private String hashedPassword;
     private String salt;
     private double balance;
+    private int accountNum;
 
-    public Account(String hashedPassword, String salt, double balance) {
+    public Account(String hashedPassword, String salt, double balance, int accountNum) {
         this.hashedPassword = hashedPassword;
         this.salt = salt;
         this.balance = balance;
+        this.accountNum = accountNum;
+    }
+
+    public int getAccountNum() {
+        return accountNum;
     }
 
     public String getHashedPassword() {

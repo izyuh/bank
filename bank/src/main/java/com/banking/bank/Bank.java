@@ -4,6 +4,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
 import java.util.HexFormat;
+import java.util.Random;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import java.util.HashMap;
@@ -36,7 +37,15 @@ public class Bank {
         }
         String salt = generateSalt();
         String hashedPassword = hashPassword(password, salt);
-        accounts.put(username, new Account(hashedPassword, salt, 500.0));
+
+
+        int accountNum = generateAccountNumbers();
+
+        while(accountNumberExists(accountNum)) {
+            accountNum = generateAccountNumbers();
+        }
+
+        accounts.put(username, new Account(hashedPassword, salt, 500.0, accountNum));
         saveAccountsToFile();
         return true;
     }
@@ -60,6 +69,50 @@ public class Bank {
             return true;
         }
         return false;
+    }
+
+    public static boolean transfer(int fromAccountNum, int toAccountNum, double amount) {
+        if (amount <= 0) {
+            System.out.println("Transfer failed: Invalid amount.");
+            return false;
+        }
+        
+        Account fromAccount = null;
+        Account toAccount = null;
+        
+        // Find accounts by account number
+        for (Account account : accounts.values()) {
+            if (account.getAccountNum() == fromAccountNum) {
+                fromAccount = account;
+            }
+            if (account.getAccountNum() == toAccountNum) {
+                toAccount = account;
+            }
+        }
+        
+        // Check if both accounts exist
+        if (fromAccount == null) {
+            System.out.println("Transfer failed: Source account not found.");
+            return false;
+        }
+        if (toAccount == null) {
+            System.out.println("Transfer failed: Destination account not found.");
+            return false;
+        }
+        
+        // Check if source account has sufficient funds
+        if (fromAccount.getBalance() < amount) {
+            System.out.println("Transfer failed: Insufficient funds.");
+            return false;
+        }
+        
+        // Perform the transfer
+        fromAccount.withdrawBalance(amount);
+        toAccount.addBalance(amount);
+        saveAccountsToFile();
+        
+        System.out.println("Transfer successful: $" + amount + " transferred from account " + fromAccountNum + " to account " + toAccountNum);
+        return true;
     }
 
     // Get balance
@@ -94,7 +147,7 @@ public class Bank {
             for (Map.Entry<String, Account> entry : accounts.entrySet()) {
                 String username = entry.getKey();
                 Account acc = entry.getValue();
-                writer.println(username + "," + acc.getHashedPassword() + "," + acc.getSalt() + "," + acc.getBalance());
+                writer.println(username + "," + acc.getHashedPassword() + "," + acc.getSalt() + "," + acc.getBalance() + "," + acc.getAccountNum());
             }
         } catch (Exception e) {
             System.out.println("Error saving accounts: " + e.getMessage());
@@ -110,23 +163,37 @@ public class Bank {
             while (fileScanner.hasNextLine()) {
                 String line = fileScanner.nextLine();
                 String[] parts = line.split(",");
-                if (parts.length == 4) {
+                if (parts.length == 5) {
                     String username = parts[0];
                     String hashedPassword = parts[1];
                     String salt = parts[2];
                     double balance = Double.parseDouble(parts[3]);
-                    accounts.put(username, new Account(hashedPassword, salt, balance));
-                } else if (parts.length == 3) {
-                    // Handle old format without salt (for backward compatibility)
-                    String username = parts[0];
-                    String hashedPassword = parts[1];
-                    double balance = Double.parseDouble(parts[2]);
-                    String salt = generateSalt(); // Generate new salt for existing accounts
-                    accounts.put(username, new Account(hashedPassword, salt, balance));
+                    int accountNum = Integer.parseInt(parts[4]);
+                    accounts.put(username, new Account(hashedPassword, salt, balance, accountNum));
                 }
             }
         } catch (Exception e) {
             System.out.println("Error loading accounts: " + e.getMessage());
         }
+    }
+
+    private static int generateAccountNumbers() {
+         
+        Random random = new Random();
+        int accountNumbers = 0;;
+
+        for (int i = 0; i < 9; i++) {
+            accountNumbers = accountNumbers * 10 + random.nextInt(10);
+            }
+            return accountNumbers;
+        }
+
+    private static boolean accountNumberExists(int accountNum) {
+        for(Account account : accounts.values()) {
+            if (account.getAccountNum() == accountNum) {
+                return true;
+            }
+        }
+        return false;
     }
 }

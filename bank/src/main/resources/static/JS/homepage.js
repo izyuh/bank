@@ -25,8 +25,10 @@
               return res.json();
             })
             .then((data) => {
-              document.getElementById("result").innerText = data.message;
-              if (data.success) {
+              if (!data.success) {
+                document.getElementById("result").innerText = data.message;
+              }
+              else if (data.success) {
                 sessionStorage.setItem("CurrentUser", data.username);
                 sessionStorage.setItem("balance", data.balance);
 
