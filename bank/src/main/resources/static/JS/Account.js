@@ -93,11 +93,13 @@ document.getElementById("withdraw").addEventListener("click", () => {
     });
 });
 
+document.getElementById("accountNumber").innerHTML = `Account Number: <b>${sessionStorage.getItem("accountNumber")}</b>`;
+
 document.getElementById("transfer").addEventListener("click", () => {
   const input = document.getElementById("amount");
 
   const amount = parseFloat(input.value);
-  if (isNaN(amount) || amount <= 0) {
+  if (isNaN(amount) || amount <= 0 || amount > sessionStorage.getItem("balance")) {
     alert("Please enter a valid amount to transfer.");
     return;
   }
@@ -109,6 +111,7 @@ document.getElementById("transfer").addEventListener("click", () => {
 
   if (!toAccountNum || toAccountNum.length !== 9 || isNaN(toAccountNum)) {
     alert("Please enter a valid 9-digit account number.");
+    input.value = ""; // Clear the amount input
     return;
   }
 
@@ -118,9 +121,9 @@ document.getElementById("transfer").addEventListener("click", () => {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      fromAccountNum: sessionStorage.getItem("CurrentUser"),
-      toAccountNum: parseInt(toAccountNum),
-      amount: amount,
+      fromAccountNum: sessionStorage.getItem("accountNumber"),
+      toAccountNum: toAccountNum,
+      amount: amount.toString()
     }),
   })
     .then((response) => {

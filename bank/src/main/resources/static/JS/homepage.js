@@ -31,6 +31,7 @@
               else if (data.success) {
                 sessionStorage.setItem("CurrentUser", data.username);
                 sessionStorage.setItem("balance", data.balance);
+                sessionStorage.setItem("accountNumber", data.accountNumber);
 
                 document.getElementById("username").value = "";
                 document.getElementById("password").value = "";

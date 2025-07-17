@@ -2,6 +2,8 @@ package com.banking.bank;
 
 import org.springframework.web.bind.annotation.*;
 import java.util.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/api")
@@ -19,6 +21,7 @@ public class BankController {
         response.put("message", isAuthenticated ? "Login successful" : "Invalid username or password");
         response.put("username", username);
         response.put("balance", Bank.accounts.get(username) != null ? Bank.accounts.get(username).getBalance() : 0.0);
+        response.put("accountNumber", Bank.accounts.get(username).getAccountNum());
         return response;
     }
     // Add more endpoints for deposit, withdraw, login, etc.
@@ -69,5 +72,29 @@ public class BankController {
 
     }
 
+    @PostMapping("/transfer")
+    public Map<String, Object> transfer(@RequestBody Map<String, String> accountDetails) {
 
+        int fromAccountNum = Integer.parseInt(accountDetails.get("fromAccountNum"));
+        int toAccountNum = Integer.parseInt(accountDetails.get("toAccountNum"));
+        double amount = Double.parseDouble(accountDetails.get("amount"));
+
+        boolean isTransferred = Bank.transfer(fromAccountNum, toAccountNum, amount);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", isTransferred);
+        response.put("message", isTransferred ? "Transfer successful" : "Transfer failed");
+
+        // Find the source account to get updated balance
+        double newBalance = 0.0;
+        for (Map.Entry<String, Account> entry : Bank.accounts.entrySet()) {
+            if (entry.getValue().getAccountNum() == fromAccountNum) {
+                newBalance = entry.getValue().getBalance();
+                break;
+            }
+        }
+        response.put("balance", newBalance);
+
+        return response;
+    }
 }
