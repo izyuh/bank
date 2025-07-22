@@ -6,31 +6,55 @@
 
 body {
   font-family: Arial, sans-serif;
-  font-size: 32px;
+  font-size: 25px;
   color: black;
 }
 
 header {
   background-color: #0f6e42;
   padding: 15px;
-  font-size: 0.8em;
-  margin-bottom: .2em;
+  font-size: 1em;
+  margin-bottom: 0.2em;
   color: #e9e9e9;
 }
 
-form {
-  padding: .5em;
+#loginForm {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .4em;
+  margin: 20px .4em;
+  user-select: none;
 }
 
-form > * {
-  display: inline-block;
-  margin-left: .5em;
-  font-size: 1em;
+#loginForm input {
+  font: 1em sans-serif;
+  padding: 5px 10px;
+  margin: .2em 0;
+  border-radius: 4px;
 }
 
 button {
   font: 1em sans-serif;
- 
+  padding: 5px 10px;
+  margin: .2em 0;
+  border-radius: 4px;
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.2s ease;
+}
+
+button[type="submit"] {
+  background-color: #e80;
+  color: #fff;
+}
+
+button:hover {
+  transform: scale(1.05);
+}
+
+button[type="submit"]:hover {
+  background-color: #d70;
+}
 
 img {
   width: 100%;
@@ -41,22 +65,40 @@ img {
 footer {
   background-color: #222;
   color: #fff;
-  padding: 40px 20px;
+  padding: 4em 2em;
   font-family: Arial, sans-serif;
 }
 
 .footer-container-top {
-  max-width: 1200px;
+  max-width: 100%;
   margin: 0 auto;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 20px;
   width: 100%;
+  /* outline: 5px solid red; */
 }
 
 .footer-section {
   padding: 10px;
+  font-size: clamp(0.8em, 2vw, 1.2em);
 }
+
+/* .footer-section.about {
+  background-color: blue;
+}
+
+.footer-section.quick-links {
+  background-color: purple;
+}
+
+.footer-section.contact-info {
+  background-color: green;
+}
+
+.footer-section.newsletter {
+  background-color: orange;
+} */
 
 .footer-section h3 {
   margin-bottom: 15px;
@@ -115,6 +157,7 @@ footer {
 
 .footer-bottom p {
   margin-bottom: 10px;
+  font-size: 0.3em;
 }
 
 .social-links {
@@ -130,3 +173,18 @@ footer {
 .social-links a:hover {
   color: #fff;
 }
+
+@media (max-width: 900px) {
+  .footer-container-top {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .footer-section {
+    border-bottom: 1px solid #444;
+  }
+
+  .footer-section:last-child {
+    border-bottom: none;
+  }
+  }
