@@ -36,57 +36,7 @@ header h1 {
   user-select: none;
 }
 
-#loginForm {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4em;
-  margin: 20px 1em;
-  user-select: none;
-}
 
-#loginForm input {
-  font: 1em sans-serif;
-  padding: 5px 10px;
-  margin: 0.2em 0;
-  border-radius: 4px;
-  box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.322);
-  outline: none;
-}
-
-button {
-  font: 1em sans-serif;
-  padding: 5px 10px;
-  margin: 0.2em 0;
-  border-radius: 4px;
-  cursor: pointer;
-  user-select: none;
-  transition: transform 0.2s ease;
-}
-
-button[type="submit"] {
-  background-color: #e80;
-  color: #fff;
-}
-
-button:hover {
-  transform: scale(1.05);
-}
-
-button[type="submit"]:hover {
-  background-color: #d70;
-}
-
-#result {
-  display: inline-block;
-  align-self: flex-start;
-  margin: .5em;
-  font-size: 1.2em;
-  color: #ff2828;
-  padding: 5px 8px;
-  user-select: none;
-  backdrop-filter: blur(2px);
-  visibility: hidden;
-} 
 
 #quote-container {
   display: flex;
