@@ -3,12 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../CSS/accountCreation.css">
+    <link rel="stylesheet" href="../CSS/footer.css">
     <title>Create an Account</title>
 </head>
 <body>
-    <h1>Create an Account</h1>
+    <header>
+      <a href="../HTML/Homepage.html"><img src="../images/Seal_of_Pomona,_California.png" alt="Seal of Pomona, California"></a>
+      <h1>Bank of Pomona</h1>
+    </header>
+
 
     <form id="accountCreationForm" autocomplete="off">
+        <h1>Create an Account</h1>
+
         <label for="username">Username:</label>
         <input type="text" id="username" name="username" required>
         
@@ -19,6 +27,57 @@
     </form>
 
     <div id="result"></div>
+
+    <footer>
+      <div class="footer-container-top">
+        <!-- About -->
+        <div class="footer-section about">
+          <h3>About Us</h3>
+          <p>
+            At Bank of Pomona, our mission has always been to empower individuals, families, and businesses to achieve financial success with confidence and clarity.
+          </p>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="footer-section quick-links">
+          <h3>Quick Links</h3>
+          <ul>
+            <li><a href="/about">About</a></li>
+            <li><a href="/services">Services</a></li>
+            <li><a href="/blog">Blog</a></li>
+            <li><a href="/contact">Contact</a></li>
+          </ul>
+        </div>
+
+        <!-- Contact Info -->
+        <div class="footer-section contact-info">
+          <h3>Contact</h3>
+          <p>Email: info@example.com</p>
+          <p>Phone: (123) 456-7890</p>
+          <p><a href="https://maps.app.goo.gl/dPXK7RP8KoB7QVw38">Address: 123 Main St, Pomona, CA</a></p>
+        </div>
+
+        <!-- Newsletter -->
+        <div class="footer-section newsletter">
+          <h3>Subscribe to our Newsletter</h3>
+          <form class="newsletter-form">
+            <input type="email" placeholder="Your email" />
+            <br />
+            <button type="submit">Subscribe</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Bottom Bar -->
+      <div class="footer-bottom">
+        <p>&copy; 2025 The Bank of Pomona. All rights reserved.</p>
+        <div class="social-links">
+          <a href="#">Facebook</a>
+          <a href="#">Twitter</a>
+          <a href="#">LinkedIn</a>
+        </div>
+      </div>
+    </footer>
 
     <script src="../JS/AccountCreation.js"></script>
     
