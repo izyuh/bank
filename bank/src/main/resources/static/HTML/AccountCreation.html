@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../CSS/accountCreation.css">
+    <link rel="stylesheet" href="../CSS/Header.css">
     <link rel="stylesheet" href="../CSS/Form.css">
     <link rel="stylesheet" href="../CSS/footer.css">
     <title>Create an Account</title>
@@ -14,18 +15,19 @@
       <h1>Bank of Pomona</h1>
     </header>
 
-        <form id="accountCreationForm" autocomplete="off">
+        <form id="accountCreationForm" class="Form" autocomplete="off">
       <div id="inputs">
         <input type="text" id="username" placeholder="Username" required />
-        <input type="password" id="password" placeholder="Password" required />
-        <input type="password" id="password-retype" placeholder="Re-enter Password" required />
 
+          <div id="passwords-container">
+            <input type="password" id="password" placeholder="Password" required />
+            <input type="password" id="password-retype" placeholder="Re-enter Password" required />
+          </div>
+        
       </div>
         
-      
       <div id="buttons">
-        <button type="submit">Login</button>
-        <button id="Create-Account">Create Account</button>
+        <button type="submit" id="Create-Account">Create Account</button>
       </div>
     </form>
 
