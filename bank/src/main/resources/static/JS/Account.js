@@ -154,5 +154,6 @@ document.getElementById("transfer").addEventListener("click", () => {
 document.getElementById("logout").addEventListener("click", () => {
   sessionStorage.removeItem("CurrentUser");
   sessionStorage.removeItem("balance");
+  sessionStorage.removeItem("accountNumber");
   window.location.href = "../HTML/Homepage.html";
 });
