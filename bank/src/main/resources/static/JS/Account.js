@@ -1,3 +1,4 @@
+
 let username = sessionStorage.getItem("CurrentUser");
 let balance = sessionStorage.getItem("balance");
 
@@ -155,5 +156,5 @@ document.getElementById("logout").addEventListener("click", () => {
   sessionStorage.removeItem("CurrentUser");
   sessionStorage.removeItem("balance");
   sessionStorage.removeItem("accountNumber");
-  window.location.href = "../HTML/Homepage.html";
+  window.location.replace('../HTML/Homepage.html');
 });

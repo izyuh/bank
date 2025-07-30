@@ -47,13 +47,13 @@ button[type="submit"]:hover {
 }
 
 #result {
-  display: inline-block;
+  max-width: fit-content;
   align-self: flex-start;
-  margin: 0.5em;
   font-size: 1.2em;
   color: #ff2828;
   padding: 5px 8px;
   user-select: none;
+  background-color: rgba(0, 0, 0, 0.692);
   backdrop-filter: blur(2px);
   visibility: hidden;
 }

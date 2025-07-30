@@ -31,3 +31,7 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Database Credentials ###
+application.properties
+application-prod.properties

@@ -1,12 +1,26 @@
 document.getElementById("accountCreationForm").addEventListener("submit", (e) => {
     e.preventDefault();
+
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+    const passwordConfirm = document.getElementById("password-retype").value;
+
+    if(password !== passwordConfirm) {
+        document.getElementById("password").value = "";
+        document.getElementById("password-retype").value = "";
+        alert("Passwords do not match");
+        return;
+    }
+
+    if(!username || !password || username.length < 3 || username.length > 50) {
+    alert("Username must be between 3 and 50 characters");
+    return;
+    }
     
     const formData = {
-        username: document.getElementById("username").value,
-        password: document.getElementById("password").value
+        username: username,
+        password: password
     };
-
-    console.log("Form Data:", formData);
 
     fetch("/api/create-account", {
         method: "POST", 

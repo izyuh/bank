@@ -1,40 +1,111 @@
 package com.banking.bank;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import com.banking.bank.repository.AccountRepository;
 import java.util.*;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import java.security.MessageDigest;
+import java.security.SecureRandom;
+import java.nio.charset.StandardCharsets;
+import java.util.HexFormat;
 
 @RestController
 @RequestMapping("/api")
 public class BankController {
 
-    @PostMapping("/login")
-    public Map<String, Object> login(@RequestBody Map<String, String> a) {
-        String username = a.get("username");
-        String password = a.get("password");
+    @Autowired
+    private AccountRepository accountRepository;
 
-        boolean isAuthenticated = Bank.handleLogin(username, password);
+    private static String hashPassword(String salt, String password) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            String saltedPassword = salt + password;
+            byte[] hashBytes = digest.digest(saltedPassword.getBytes(StandardCharsets.UTF_8));
+            return HexFormat.of().formatHex(hashBytes);
+        } catch (Exception e) {
+            throw new RuntimeException("Error hashing password", e);
+        }
+    }
+
+    private static String generateSalt() {
+        SecureRandom random = new SecureRandom();
+        byte[] salt = new byte[16]; // 16 bytes = 128 bits
+        random.nextBytes(salt);
+        return HexFormat.of().formatHex(salt);
+    }
+
+    @PostMapping("/login")
+    public Map<String, Object> login(@RequestBody Map<String, String> loginRequest) {
+        String username = loginRequest.get("username");
+        String password = loginRequest.get("password");
 
         Map<String, Object> response = new HashMap<>();
-        response.put("success", isAuthenticated);
-        response.put("message", isAuthenticated ? "Login successful" : "Invalid username or password");
-        response.put("username", username);
-        response.put("balance", Bank.accounts.get(username) != null ? Bank.accounts.get(username).getBalance() : 0.0);
-        response.put("accountNumber", Bank.accounts.get(username).getAccountNum());
+
+        // Get account by username only
+        Optional<Account> accountOpt = accountRepository.findByUsername(username);
+
+        if (accountOpt.isPresent()) {
+            Account account = accountOpt.get();
+
+            // Hash the input password with the stored salt
+            String hashedInputPassword = hashPassword(account.getSalt(), password);
+
+            // Compare hashed passwords
+            if (hashedInputPassword.equals(account.getHashedPassword())) {
+                // Login successful
+                response.put("success", true);
+                response.put("message", "Login successful");
+                response.put("username", username);
+                response.put("balance", account.getBalance());
+                response.put("accountNumber", account.getAccountNumber());
+            } else {
+                // Wrong password
+                response.put("success", false);
+                response.put("message", "Invalid username or password");
+            }
+        } else {
+            // Username doesn't exist - but don't reveal this!
+            response.put("success", false);
+            response.put("message", "Invalid username or password");
+        }
+
         return response;
     }
-    // Add more endpoints for deposit, withdraw, login, etc.
 
     @PostMapping("/create-account")
     public Map<String, Object> createAccount(@RequestBody Map<String, String> accountDetails) {
         String username = accountDetails.get("username");
         String password = accountDetails.get("password");
 
-        boolean isCreated = Bank.createAccount(username, password);
+        System.out.println(username + " " + password);
+
         Map<String, Object> response = new HashMap<>();
-        response.put("success", isCreated);
-        response.put("message", isCreated ? "Account created successfully" : "Username already exists");
+
+        // Check if username already exists
+        if (accountRepository.existsByUsername(username)) {
+            response.put("success", false);
+            response.put("message", "Username already exists");
+            return response;
+        }
+
+        // Generate account number
+        String accountNumber = "ACC" + String.format("%06d", (int) (Math.random() * 1000000));
+
+        // Hash password
+        String salt = generateSalt();
+        String hashedPassword = hashPassword(salt, password);
+
+        System.out.println(hashedPassword + " " + salt);
+
+        // Create new account with hashed password
+        Account newAccount = new Account(username, hashedPassword, salt, accountNumber, 500.0);
+
+        System.out.println(newAccount);
+
+        accountRepository.save(newAccount);
+
+        response.put("success", true);
+        response.put("message", "Account created successfully");
 
         return response;
     }
@@ -44,13 +115,21 @@ public class BankController {
         String username = depositDetails.get("username");
         double amount = Double.parseDouble(depositDetails.get("amount"));
 
-        boolean isDeposited = Bank.deposit(username, amount);
-
         Map<String, Object> response = new HashMap<>();
 
-        response.put("success", isDeposited);
-        response.put("message", "Deposit successful");
-        response.put("balance", Bank.accounts.get(username).getBalance());
+        Optional<Account> accountOpt = accountRepository.findByUsername(username);
+        if (accountOpt.isPresent() && amount > 0) {
+            Account account = accountOpt.get();
+            account.addBalance(amount);
+            accountRepository.save(account);
+
+            response.put("success", true);
+            response.put("message", "Deposit successful");
+            response.put("balance", account.getBalance());
+        } else {
+            response.put("success", false);
+            response.put("message", "Invalid account or amount");
+        }
 
         return response;
     }
@@ -60,40 +139,65 @@ public class BankController {
         String username = withdrawDetails.get("username");
         double amount = Double.parseDouble(withdrawDetails.get("amount"));
 
-        boolean isWithdrawn = Bank.withdraw(username, amount);
-
         Map<String, Object> response = new HashMap<>();
 
-        response.put("success", isWithdrawn);
-        response.put("message", isWithdrawn ? "Withdrawal successful" : "Insufficient funds or invalid amount");
-        response.put("balance", Bank.accounts.get(username) != null ? Bank.accounts.get(username).getBalance() : 0.0);
+        Optional<Account> accountOpt = accountRepository.findByUsername(username);
+        if (accountOpt.isPresent()) {
+            Account account = accountOpt.get();
+            try {
+                account.withdrawBalance(amount);
+                accountRepository.save(account);
+
+                response.put("success", true);
+                response.put("message", "Withdrawal successful");
+                response.put("balance", account.getBalance());
+            } catch (IllegalArgumentException e) {
+                response.put("success", false);
+                response.put("message", e.getMessage());
+                response.put("balance", account.getBalance());
+            }
+        } else {
+            response.put("success", false);
+            response.put("message", "Account not found");
+        }
 
         return response;
-
     }
 
     @PostMapping("/transfer")
-    public Map<String, Object> transfer(@RequestBody Map<String, String> accountDetails) {
-
-        int fromAccountNum = Integer.parseInt(accountDetails.get("fromAccountNum"));
-        int toAccountNum = Integer.parseInt(accountDetails.get("toAccountNum"));
-        double amount = Double.parseDouble(accountDetails.get("amount"));
-
-        boolean isTransferred = Bank.transfer(fromAccountNum, toAccountNum, amount);
+    public Map<String, Object> transfer(@RequestBody Map<String, String> transferDetails) {
+        String fromAccountNumber = transferDetails.get("fromAccountNum");
+        String toAccountNumber = transferDetails.get("toAccountNum");
+        double amount = Double.parseDouble(transferDetails.get("amount"));
 
         Map<String, Object> response = new HashMap<>();
-        response.put("success", isTransferred);
-        response.put("message", isTransferred ? "Transfer successful" : "Transfer failed");
 
-        // Find the source account to get updated balance
-        double newBalance = 0.0;
-        for (Map.Entry<String, Account> entry : Bank.accounts.entrySet()) {
-            if (entry.getValue().getAccountNum() == fromAccountNum) {
-                newBalance = entry.getValue().getBalance();
-                break;
+        Optional<Account> fromAccountOpt = accountRepository.findByAccountNumber(fromAccountNumber);
+        Optional<Account> toAccountOpt = accountRepository.findByAccountNumber(toAccountNumber);
+
+        if (fromAccountOpt.isPresent() && toAccountOpt.isPresent()) {
+            Account fromAccount = fromAccountOpt.get();
+            Account toAccount = toAccountOpt.get();
+
+            try {
+                fromAccount.withdrawBalance(amount);
+                toAccount.addBalance(amount);
+
+                accountRepository.save(fromAccount);
+                accountRepository.save(toAccount);
+
+                response.put("success", true);
+                response.put("message", "Transfer successful");
+                response.put("balance", fromAccount.getBalance());
+            } catch (IllegalArgumentException e) {
+                response.put("success", false);
+                response.put("message", e.getMessage());
+                response.put("balance", fromAccount.getBalance());
             }
+        } else {
+            response.put("success", false);
+            response.put("message", "One or both accounts not found");
         }
-        response.put("balance", newBalance);
 
         return response;
     }
