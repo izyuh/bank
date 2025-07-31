@@ -33,5 +33,7 @@ build/
 .vscode/
 
 ### Database Credentials ###
-src/main/resources/application.properties
 src/main/resources/application-*.properties
+src/main/resources/application-local.properties
+*.env
+.env
