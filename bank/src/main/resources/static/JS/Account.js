@@ -6,13 +6,14 @@ document.getElementsByTagName("title")[0].innerText = `Account - ${username}`;
 
 document.getElementById("welcome").innerText = `Welcome ${username}`;
 
-document.getElementById("balance").innerText = `Your Balance: $${balance}`;
+document.getElementById("balance").innerText = `Your Balance: ${parseFloat(balance).toLocaleString("en-US", { style: "currency", currency: "USD" })}`;
 
 document.getElementById("deposit").addEventListener("click", () => {
   const amount = parseFloat(document.getElementById("amount").value);
   if (isNaN(amount) || amount <= 0) {
     alert("Please enter a valid amount to deposit.");
     return;
+    
   }
   fetch("/api/deposit", {
     method: "POST",
@@ -40,7 +41,7 @@ document.getElementById("deposit").addEventListener("click", () => {
       sessionStorage.setItem("balance", data.balance);
       document.getElementById(
         "balance"
-      ).innerText = `Your Balance: $${sessionStorage.getItem("balance")}`;
+      ).innerText = `Your Balance: ${parseFloat(data.balance).toLocaleString("en-US", { style: "currency", currency: "USD" })}`;
       // Clear the input field
       document.getElementById("amount").value = ""; // Clear the input field
       alert("Money Deposited");
@@ -83,7 +84,7 @@ document.getElementById("withdraw").addEventListener("click", () => {
       sessionStorage.setItem("balance", data.balance);
       document.getElementById(
         "balance"
-      ).innerText = `Your Balance: $${sessionStorage.getItem("balance")}`;
+      ).innerText = `Your Balance: ${parseFloat(data.balance).toLocaleString("en-US", { style: "currency", currency: "USD" })}`;
       // Clear the input field
       document.getElementById("amount").value = ""; // Clear the input field
       alert("Money Withdrawn");
@@ -142,7 +143,7 @@ document.getElementById("transfer").addEventListener("click", () => {
       sessionStorage.setItem("balance", data.balance);
       document.getElementById(
         "balance"
-      ).innerText = `Your Balance: $${sessionStorage.getItem("balance")}`;
+      ).innerText = `Your Balance: ${parseFloat(data.balance).toLocaleString("en-US", { style: "currency", currency: "USD" })}`;
       input.value = ""; // Clear the amount input
       alert("Money Transferred");
     })
