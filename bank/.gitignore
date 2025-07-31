@@ -33,5 +33,5 @@ build/
 .vscode/
 
 ### Database Credentials ###
-application.properties
-application-prod.properties
+src/main/resources/application.properties
+src/main/resources/application-*.properties
