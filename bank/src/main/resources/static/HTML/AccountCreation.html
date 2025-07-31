@@ -1,31 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../CSS/accountCreation.css">
-    <link rel="stylesheet" href="../CSS/Header.css">
-    <link rel="stylesheet" href="../CSS/Form.css">
-    <link rel="stylesheet" href="../CSS/footer.css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../CSS/accountCreation.css" />
+    <link rel="stylesheet" href="../CSS/Header.css" />
+    <link rel="stylesheet" href="../CSS/Form.css" />
+    <link rel="stylesheet" href="../CSS/footer.css" />
     <title>Create an Account</title>
-</head>
-<body>
+  </head>
+  <body>
     <header>
-      <a href="../HTML/Homepage.html"><img src="../images/Seal_of_Pomona,_California.png" alt="Seal of Pomona, California"></a>
+      <a href="../index.html"
+        ><img
+          src="../images/Seal_of_Pomona,_California.png"
+          alt="Seal of Pomona, California"
+      /></a>
       <h1>Bank of Pomona</h1>
     </header>
 
-        <form id="accountCreationForm" class="Form" autocomplete="off">
+    <form id="accountCreationForm" class="Form" autocomplete="off">
       <div id="inputs">
-        <input type="text" id="username" autofocus="autofocus" placeholder="Username" required />
+        <input
+          type="text"
+          id="username"
+          autofocus="autofocus"
+          placeholder="Username"
+          required
+        />
 
-          <div id="passwords-container">
-            <input type="password" id="password" placeholder="Password" required />
-            <input type="password" id="password-retype" placeholder="Re-enter Password" required />
-          </div>
-        
+        <div id="passwords-container">
+          <input
+            type="password"
+            id="password"
+            placeholder="Password"
+            required
+          />
+          <input
+            type="password"
+            id="password-retype"
+            placeholder="Re-enter Password"
+            required
+          />
+        </div>
       </div>
-        
+
       <div id="buttons">
         <button type="submit" id="Create-Account">Create Account</button>
       </div>
@@ -39,7 +58,9 @@
         <div class="footer-section about">
           <h3>About Us</h3>
           <p>
-            At Bank of Pomona, our mission has always been to empower individuals, families, and businesses to achieve financial success with confidence and clarity.
+            At Bank of Pomona, our mission has always been to empower
+            individuals, families, and businesses to achieve financial success
+            with confidence and clarity.
           </p>
         </div>
 
@@ -59,7 +80,11 @@
           <h3>Contact</h3>
           <p>Email: info@example.com</p>
           <p>Phone: (123) 456-7890</p>
-          <p><a href="https://maps.app.goo.gl/dPXK7RP8KoB7QVw38">Address: 123 Main St, Pomona, CA</a></p>
+          <p>
+            <a href="https://maps.app.goo.gl/dPXK7RP8KoB7QVw38"
+              >Address: 123 Main St, Pomona, CA</a
+            >
+          </p>
         </div>
 
         <!-- Newsletter -->
@@ -85,6 +110,5 @@
     </footer>
 
     <script src="../JS/AccountCreation.js"></script>
-    
-</body>
+  </body>
 </html>

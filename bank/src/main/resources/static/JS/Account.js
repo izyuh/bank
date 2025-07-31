@@ -1,4 +1,3 @@
-
 let username = sessionStorage.getItem("CurrentUser");
 let balance = sessionStorage.getItem("balance");
 
@@ -6,14 +5,15 @@ document.getElementsByTagName("title")[0].innerText = `Account - ${username}`;
 
 document.getElementById("welcome").innerText = `Welcome ${username}`;
 
-document.getElementById("balance").innerText = `Your Balance: ${parseFloat(balance).toLocaleString("en-US", { style: "currency", currency: "USD" })}`;
+document.getElementById("balance").innerText = `Your Balance: ${parseFloat(
+  balance
+).toLocaleString("en-US", { style: "currency", currency: "USD" })}`;
 
 document.getElementById("deposit").addEventListener("click", () => {
   const amount = parseFloat(document.getElementById("amount").value);
   if (isNaN(amount) || amount <= 0) {
     alert("Please enter a valid amount to deposit.");
     return;
-    
   }
   fetch("/api/deposit", {
     method: "POST",
@@ -41,7 +41,10 @@ document.getElementById("deposit").addEventListener("click", () => {
       sessionStorage.setItem("balance", data.balance);
       document.getElementById(
         "balance"
-      ).innerText = `Your Balance: ${parseFloat(data.balance).toLocaleString("en-US", { style: "currency", currency: "USD" })}`;
+      ).innerText = `Your Balance: ${parseFloat(data.balance).toLocaleString(
+        "en-US",
+        { style: "currency", currency: "USD" }
+      )}`;
       // Clear the input field
       document.getElementById("amount").value = ""; // Clear the input field
       alert("Money Deposited");
@@ -84,7 +87,10 @@ document.getElementById("withdraw").addEventListener("click", () => {
       sessionStorage.setItem("balance", data.balance);
       document.getElementById(
         "balance"
-      ).innerText = `Your Balance: ${parseFloat(data.balance).toLocaleString("en-US", { style: "currency", currency: "USD" })}`;
+      ).innerText = `Your Balance: ${parseFloat(data.balance).toLocaleString(
+        "en-US",
+        { style: "currency", currency: "USD" }
+      )}`;
       // Clear the input field
       document.getElementById("amount").value = ""; // Clear the input field
       alert("Money Withdrawn");
@@ -95,13 +101,21 @@ document.getElementById("withdraw").addEventListener("click", () => {
     });
 });
 
-document.getElementById("accountNumber").innerHTML = `Account Number: <b>${sessionStorage.getItem("accountNumber")}</b>`;
+document.getElementById(
+  "accountNumber"
+).innerHTML = `Account Number: <b>${sessionStorage.getItem(
+  "accountNumber"
+)}</b>`;
 
 document.getElementById("transfer").addEventListener("click", () => {
   const input = document.getElementById("amount");
 
   const amount = parseFloat(input.value);
-  if (isNaN(amount) || amount <= 0 || amount > sessionStorage.getItem("balance")) {
+  if (
+    isNaN(amount) ||
+    amount <= 0 ||
+    amount > sessionStorage.getItem("balance")
+  ) {
     alert("Please enter a valid amount to transfer.");
     return;
   }
@@ -125,7 +139,7 @@ document.getElementById("transfer").addEventListener("click", () => {
     body: JSON.stringify({
       fromAccountNum: sessionStorage.getItem("accountNumber"),
       toAccountNum: toAccountNum,
-      amount: amount.toString()
+      amount: amount.toString(),
     }),
   })
     .then((response) => {
@@ -143,7 +157,10 @@ document.getElementById("transfer").addEventListener("click", () => {
       sessionStorage.setItem("balance", data.balance);
       document.getElementById(
         "balance"
-      ).innerText = `Your Balance: ${parseFloat(data.balance).toLocaleString("en-US", { style: "currency", currency: "USD" })}`;
+      ).innerText = `Your Balance: ${parseFloat(data.balance).toLocaleString(
+        "en-US",
+        { style: "currency", currency: "USD" }
+      )}`;
       input.value = ""; // Clear the amount input
       alert("Money Transferred");
     })
@@ -157,5 +174,6 @@ document.getElementById("logout").addEventListener("click", () => {
   sessionStorage.removeItem("CurrentUser");
   sessionStorage.removeItem("balance");
   sessionStorage.removeItem("accountNumber");
-  window.location.replace('../HTML/Homepage.html');
+  // Update path to index.html in root
+  window.location.replace("../index.html");
 });
