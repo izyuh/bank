@@ -122,10 +122,10 @@ document.getElementById("transfer").addEventListener("click", () => {
 
   // Use prompt to get the account number and store the result
   const toAccountNum = prompt(
-    "Enter the 9-digit account number you want to transfer to:"
+    "Enter the 9 character account you want to transfer to:"
   );
 
-  if (!toAccountNum || toAccountNum.length !== 9 || isNaN(toAccountNum)) {
+  if (!toAccountNum || toAccountNum.length !== 9) {
     alert("Please enter a valid 9-digit account number.");
     input.value = ""; // Clear the amount input
     return;
@@ -174,6 +174,5 @@ document.getElementById("logout").addEventListener("click", () => {
   sessionStorage.removeItem("CurrentUser");
   sessionStorage.removeItem("balance");
   sessionStorage.removeItem("accountNumber");
-  // Update path to index.html in root
-  window.location.replace("../index.html");
+  window.location.replace("../HTML/index.html");
 });
