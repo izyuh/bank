@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: bank-backend
+    env: java
+    buildCommand: "./mvnw clean package -DskipTests"
+    startCommand: "java -jar target/bank-0.0.1-SNAPSHOT.jar"
+    envVars:
+      - key: DB_HOST
+        value: sql3.freesqldatabase.com
+      - key: DB_PORT
+        value: 3306
+      - key: DB_NAME
+        value: sql3792840
+      - key: DB_USERNAME
+        value: sql3792840
+      - key: DB_PASSWORD
+        value: LiwBDU2TGP

@@ -49,6 +49,6 @@ document
       })
       .catch((error) => {
         console.error("Error:", error);
-        alert("Failed to create account. Please try again.aaaaaa");
+        alert("Failed to create account. Please try again.");
       });
   });
