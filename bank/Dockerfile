@@ -1,4 +1,3 @@
-# filepath: c:\Users\isaia\Downloads\bank\bank\Dockerfile
 FROM openjdk:17-jdk-slim
 
 WORKDIR /app
