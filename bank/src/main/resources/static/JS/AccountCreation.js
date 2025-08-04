@@ -24,7 +24,7 @@ document
       password: password,
     };
 
-    fetch("/api/create-account", {
+    fetch("https://bank-7qbm.onrender.com/api/create-account", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

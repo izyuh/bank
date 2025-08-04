@@ -15,7 +15,7 @@ document.getElementById("deposit").addEventListener("click", () => {
     alert("Please enter a valid amount to deposit.");
     return;
   }
-  fetch("/api/deposit", {
+  fetch("https://bank-7qbm.onrender.com/api/deposit", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -61,7 +61,7 @@ document.getElementById("withdraw").addEventListener("click", () => {
     alert("Please enter a valid amount to withdraw.");
     return;
   }
-  fetch("/api/withdraw", {
+  fetch("https://bank-7qbm.onrender.com/api/withdraw", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -131,7 +131,7 @@ document.getElementById("transfer").addEventListener("click", () => {
     return;
   }
 
-  fetch("/api/transfer", {
+  fetch("https://bank-7qbm.onrender.com/api/transfer", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
