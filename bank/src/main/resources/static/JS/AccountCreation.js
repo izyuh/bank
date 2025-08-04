@@ -45,7 +45,7 @@ document
 
         console.log("Success:", data);
         alert("Account created successfully!");
-        window.location.href = "../HTML/index.html";
+        window.location.href = "../index.html";
       })
       .catch((error) => {
         console.error("Error:", error);

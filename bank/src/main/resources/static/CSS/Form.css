@@ -5,6 +5,7 @@
   margin: 20px 1em;
   user-select: none;
   font-size: 1.6em;
+  max-width: 100vw;
 }
 
 #inputs {
