@@ -33,7 +33,7 @@ document.getElementById("loginForm").addEventListener("submit", (e) => {
         document.getElementById("username").value = "";
         document.getElementById("password").value = "";
 
-        window.location.href = "../HTML/Account.html"; 
+        window.location.href = "../HTML/Account.html";
       }
     })
     .catch((err) => {
@@ -48,5 +48,5 @@ document.getElementById("loginForm").addEventListener("submit", (e) => {
 
 document.getElementById("Create-Account").addEventListener("click", () => {
   console.log("clicked");
-  window.location.href = "../HTML/AccountCreation.html"; 
+  window.location.href = "/HTML/AccountCreation.html";
 });
