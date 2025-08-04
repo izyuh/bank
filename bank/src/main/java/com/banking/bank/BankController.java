@@ -9,6 +9,7 @@ import java.security.SecureRandom;
 import java.nio.charset.StandardCharsets;
 import java.util.HexFormat;
 
+@CrossOrigin(origins = "https://kaleidoscopic-starship-602186.netlify.app")
 @RestController
 @RequestMapping("/api")
 public class BankController {
