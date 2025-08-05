@@ -9,8 +9,25 @@ document.getElementById("balance").innerText = `Your Balance: ${parseFloat(
   balance
 ).toLocaleString("en-US", { style: "currency", currency: "USD" })}`;
 
+const amountInput = document.getElementById("amount");
+
+amountInput.value = numberWithCommas(amountInput.value);
+
+
+function numberWithCommas(x) {
+    x = x.toString();
+    var pattern = /(-?\d+)(\d{3})/;
+    while (pattern.test(x))
+        x = x.replace(pattern, "$1,$2");
+    return x;
+}
+
+
+
+
+/////////// ALL BANKING FUNCTIONS ///////////
 document.getElementById("deposit").addEventListener("click", () => {
-  const amount = parseFloat(document.getElementById("amount").value);
+  const amount = parseFloat(amountInput.value); 
   if (isNaN(amount) || amount <= 0) {
     alert("Please enter a valid amount to deposit.");
     return;
@@ -45,8 +62,7 @@ document.getElementById("deposit").addEventListener("click", () => {
         "en-US",
         { style: "currency", currency: "USD" }
       )}`;
-      // Clear the input field
-      document.getElementById("amount").value = ""; // Clear the input field
+      document.getElementById("amount").value = "";
       alert("Money Deposited");
     })
     .catch((error) => {
@@ -56,7 +72,7 @@ document.getElementById("deposit").addEventListener("click", () => {
 });
 
 document.getElementById("withdraw").addEventListener("click", () => {
-  const amount = parseFloat(document.getElementById("amount").value);
+  const amount = parseFloat(amountInput.value);
   if (isNaN(amount) || amount <= 0) {
     alert("Please enter a valid amount to withdraw.");
     return;
@@ -91,8 +107,7 @@ document.getElementById("withdraw").addEventListener("click", () => {
         "en-US",
         { style: "currency", currency: "USD" }
       )}`;
-      // Clear the input field
-      document.getElementById("amount").value = ""; // Clear the input field
+      document.getElementById("amount").value = "";
       alert("Money Withdrawn");
     })
     .catch((error) => {
@@ -108,9 +123,7 @@ document.getElementById(
 )}</b>`;
 
 document.getElementById("transfer").addEventListener("click", () => {
-  const input = document.getElementById("amount");
-
-  const amount = parseFloat(input.value);
+  const amount = parseFloat(amountInput.value);
   if (
     isNaN(amount) ||
     amount <= 0 ||
@@ -120,14 +133,13 @@ document.getElementById("transfer").addEventListener("click", () => {
     return;
   }
 
-  // Use prompt to get the account number and store the result
   const toAccountNum = prompt(
     "Enter the 9 character account you want to transfer to:"
   );
 
   if (!toAccountNum || toAccountNum.length !== 9) {
     alert("Please enter a valid 9-digit account number.");
-    input.value = ""; // Clear the amount input
+    amountInput.value = ""; 
     return;
   }
 
@@ -161,7 +173,7 @@ document.getElementById("transfer").addEventListener("click", () => {
         "en-US",
         { style: "currency", currency: "USD" }
       )}`;
-      input.value = ""; // Clear the amount input
+      amountInput.value = "";
       alert("Money Transferred");
     })
     .catch((error) => {

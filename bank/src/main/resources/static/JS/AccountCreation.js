@@ -5,11 +5,11 @@ document
 
     const username = document.getElementById("username").value;
     const password = document.getElementById("password").value;
-    const passwordConfirm = document.getElementById("password-retype").value;
+    const confirmPassword = document.getElementById("confirmPassword").value;
 
-    if (password !== passwordConfirm) {
+    if (password !== confirmPassword) {
       document.getElementById("password").value = "";
-      document.getElementById("password-retype").value = "";
+      document.getElementById("confirmPassword").value = "";
       alert("Passwords do not match");
       return;
     }

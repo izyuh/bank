@@ -2,6 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../CSS/accountCreation.css" />
     <link rel="stylesheet" href="../CSS/Header.css" />
     <link rel="stylesheet" href="../CSS/Form.css" />
@@ -18,7 +19,7 @@
       <h1>Bank of Pomona</h1>
     </header>
 
-<form id="loginForm" class="Form" autocomplete="off">
+<form id="accountCreationForm" class="Form" autocomplete="off">
       <div id="inputs">
         <input
           type="text"
@@ -27,12 +28,15 @@
           placeholder="Username"
           required
         />
-        <input type="password" id="password" placeholder="Password" required />
-        <input type="password" id="confirmPassword" placeholder="Confirm Password" required />
+        <div class="password-container">
+          <input type="password" id="password" placeholder="Password" required />
+          <input type="password" id="confirmPassword" placeholder="Confirm Password" required />
+        </div>
+        
       </div>
 
       <div id="buttons">
-        <button id="Create-Account">Create Account</button>
+        <button id="Create-Account" type="submit">Create Account</button>
       </div>
 
       <span id="result">Network response was not ok</span>
