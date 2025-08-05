@@ -1,6 +1,8 @@
 let username = sessionStorage.getItem("CurrentUser");
 let balance = sessionStorage.getItem("balance");
 
+const loadingIcon = document.getElementsByClassName("loader");
+
 document.getElementsByTagName("title")[0].innerText = `Account - ${username}`;
 
 document.getElementById("welcome").innerText = `Welcome ${username}`;
@@ -30,6 +32,7 @@ document.getElementById("deposit").addEventListener("click", () => {
   const amount = parseFloat(amountInput.value); 
   if (isNaN(amount) || amount <= 0) {
     alert("Please enter a valid amount to deposit.");
+    loadingIcon[0].classList.add("hidden");
     return;
   }
   fetch("https://bank-7qbm.onrender.com/api/deposit", {
@@ -46,11 +49,13 @@ document.getElementById("deposit").addEventListener("click", () => {
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
+      loadingIcon[0].classList.add("hidden");
       return response.json();
     })
     .then((data) => {
       if (!data.success) {
         alert(data.message || "Desposit Failed");
+        loadingIcon[0].classList.add("hidden");
         return;
       }
       console.log("Deposit Success:", data);
@@ -63,20 +68,24 @@ document.getElementById("deposit").addEventListener("click", () => {
         { style: "currency", currency: "USD" }
       )}`;
       document.getElementById("amount").value = "";
+      loadingIcon[0].classList.add("hidden");
       alert("Money Deposited");
     })
     .catch((error) => {
       console.error("Error during deposit:", error);
+      loadingIcon[0].classList.add("hidden");
       alert("Failed to deposit. Please try again.");
     });
 });
 
 document.getElementById("withdraw").addEventListener("click", () => {
+  loadingIcon[0].classList.remove("hidden");
   const amount = parseFloat(amountInput.value);
   if (isNaN(amount) || amount <= 0) {
     alert("Please enter a valid amount to withdraw.");
     return;
   }
+  loadingIcon[0].classList.remove("hidden");
   fetch("https://bank-7qbm.onrender.com/api/withdraw", {
     method: "POST",
     headers: {
@@ -89,12 +98,14 @@ document.getElementById("withdraw").addEventListener("click", () => {
   })
     .then((response) => {
       if (!response.ok) {
+        loadingIcon[0].classList.add("hidden");
         throw new Error("Network response was not ok");
       }
       return response.json();
     })
     .then((data) => {
       if (!data.success) {
+        loadingIcon[0].classList.add("hidden");
         alert(data.message || "Withdraw Failed");
         return;
       }
@@ -107,11 +118,13 @@ document.getElementById("withdraw").addEventListener("click", () => {
         "en-US",
         { style: "currency", currency: "USD" }
       )}`;
+      loadingIcon[0].classList.add("hidden");
       document.getElementById("amount").value = "";
       alert("Money Withdrawn");
     })
     .catch((error) => {
       console.error("Error during Withdraw:", error);
+      loadingIcon[0].classList.add("hidden");
       alert("Failed to Withdraw. Please try again.");
     });
 });
@@ -130,6 +143,7 @@ document.getElementById("transfer").addEventListener("click", () => {
     amount > sessionStorage.getItem("balance")
   ) {
     alert("Please enter a valid amount to transfer.");
+    loadingIcon[0].classList.add("hidden");
     return;
   }
 
@@ -143,6 +157,7 @@ document.getElementById("transfer").addEventListener("click", () => {
     return;
   }
 
+  loadingIcon[0].classList.remove("hidden");
   fetch("https://bank-7qbm.onrender.com/api/transfer", {
     method: "POST",
     headers: {
@@ -156,15 +171,18 @@ document.getElementById("transfer").addEventListener("click", () => {
   })
     .then((response) => {
       if (!response.ok) {
+        loadingIcon[0].classList.add("hidden");
         throw new Error("Network response was not ok");
       }
       return response.json();
     })
     .then((data) => {
       if (!data.success) {
+        loadingIcon[0].classList.add("hidden");
         alert(data.message || "Transfer Failed");
         return;
       }
+      loadingIcon[0].classList.add("hidden");
       console.log("Transfer Success:", data);
       sessionStorage.setItem("balance", data.balance);
       document.getElementById(
@@ -178,13 +196,16 @@ document.getElementById("transfer").addEventListener("click", () => {
     })
     .catch((error) => {
       console.error("Error during transfer:", error);
+      loadingIcon[0].classList.add("hidden");
       alert("Failed to transfer. Please try again.");
     });
 });
 
 document.getElementById("logout").addEventListener("click", () => {
+  loadingIcon[0].classList.remove("hidden");
   sessionStorage.removeItem("CurrentUser");
   sessionStorage.removeItem("balance");
   sessionStorage.removeItem("accountNumber");
+  loadingIcon[0].classList.add("hidden");
   window.location.replace("../index.html");
 });
