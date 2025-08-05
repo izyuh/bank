@@ -4,7 +4,11 @@ document.getElementById("loginForm").addEventListener("submit", (e) => {
   const username = document.getElementById("username").value;
   const password = document.getElementById("password").value;
 
+  const loadingIcon = document.getElementsByClassName("loader");
+
+
   console.log("Login submitted for:", username);
+  loadingIcon[0].classList.remove("hidden");
 
   fetch("https://bank-7qbm.onrender.com/api/login", {
     method: "POST",
@@ -16,16 +20,19 @@ document.getElementById("loginForm").addEventListener("submit", (e) => {
   })
     .then((res) => {
       if (!res.ok) {
+        loadingIcon[0].classList.add("hidden");
         throw new Error("Network response was not ok");
       }
       return res.json();
     })
     .then((data) => {
+      loadingIcon[0].classList.add("hidden");
       if (!data.success) {
         const resultElement = document.getElementById("result");
         resultElement.style.visibility = "visible";
         resultElement.innerText = data.message;
       } else if (data.success) {
+
         sessionStorage.setItem("CurrentUser", data.username);
         sessionStorage.setItem("balance", data.balance);
         sessionStorage.setItem("accountNumber", data.accountNumber);
@@ -37,6 +44,7 @@ document.getElementById("loginForm").addEventListener("submit", (e) => {
       }
     })
     .catch((err) => {
+      loadingIcon[0].classList.add("hidden");
       const resultElement = document.getElementById("result");
       resultElement.style.visibility = "visible";
       resultElement.innerText = "Login failed or server error";
