@@ -7,12 +7,10 @@ import java.util.*;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
 import java.nio.charset.StandardCharsets;
-import java.util.HexFormat;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = { "https://kaleidoscopic-starship-602186.netlify.app",
-        "https://loquacious-shortbread-7b5e62.netlify.app" })
+@CrossOrigin(origins = {"https://izyuh.netlify.app/"})
 public class BankController {
 
     @Autowired
