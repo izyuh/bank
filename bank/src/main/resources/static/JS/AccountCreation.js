@@ -1,3 +1,9 @@
+   const homepageButton = document.getElementById("Homepage");
+
+    homepageButton.addEventListener("click", () => {
+      window.location.href = "../index.html";
+    });
+
 document
   .getElementById("accountCreationForm")
   .addEventListener("submit", (e) => {
@@ -7,6 +13,7 @@ document
     const password = document.getElementById("password").value;
     const confirmPassword = document.getElementById("confirmPassword").value;
     const loadingIcon = document.getElementsByClassName("loader");
+ 
 
     if (password !== confirmPassword) {
       document.getElementById("password").value = "";

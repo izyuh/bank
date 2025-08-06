@@ -6,7 +6,6 @@ document.getElementById("loginForm").addEventListener("submit", (e) => {
 
   const loadingIcon = document.getElementsByClassName("loader");
 
-
   console.log("Login submitted for:", username);
   loadingIcon[0].classList.remove("hidden");
 
@@ -32,7 +31,6 @@ document.getElementById("loginForm").addEventListener("submit", (e) => {
         resultElement.style.visibility = "visible";
         resultElement.innerText = data.message;
       } else if (data.success) {
-
         sessionStorage.setItem("CurrentUser", data.username);
         sessionStorage.setItem("balance", data.balance);
         sessionStorage.setItem("accountNumber", data.accountNumber);
@@ -40,7 +38,7 @@ document.getElementById("loginForm").addEventListener("submit", (e) => {
         document.getElementById("username").value = "";
         document.getElementById("password").value = "";
 
-        window.location.href = "../HTML/Account.html";
+        window.location.href = "HTML/Account.html";
       }
     })
     .catch((err) => {
@@ -56,5 +54,5 @@ document.getElementById("loginForm").addEventListener("submit", (e) => {
 
 document.getElementById("Create-Account").addEventListener("click", () => {
   console.log("clicked");
-  window.location.href = "/HTML/AccountCreation.html";
+  window.location.href = "HTML/AccountCreation.html";
 });
