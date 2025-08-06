@@ -61,7 +61,7 @@ document.getElementById("deposit").addEventListener("click", () => {
       sessionStorage.setItem("balance", data.balance);
       document.getElementById(
         "account-balance"
-      ).innerHTML = `Your Balance: <br> ${addBreaksAfterCommas(balance)}`;
+      ).innerHTML = `Your Balance: <br> ${addBreaksAfterCommas(data.balance)}`;
 
       document.getElementById("amount").value = "";
       loadingIcon[0].classList.add("hidden");
@@ -110,7 +110,7 @@ document.getElementById("withdraw").addEventListener("click", () => {
       sessionStorage.setItem("balance", data.balance);
       document.getElementById(
         "account-balance"
-      ).innerHTML = `Your Balance: <br> ${addBreaksAfterCommas(balance)}`;
+      ).innerHTML = `Your Balance: <br> ${addBreaksAfterCommas(data.balance)}`;
 
 
       loadingIcon[0].classList.add("hidden");
@@ -182,7 +182,7 @@ document.getElementById("transfer").addEventListener("click", () => {
       sessionStorage.setItem("balance", data.balance);
       document.getElementById(
         "account-balance"
-      ).innerHTML = `Your Balance: <br> ${addBreaksAfterCommas(balance)}`;
+      ).innerHTML = `Your Balance: <br> ${addBreaksAfterCommas(data.balance)}`;
       amountInput.value = "";
       alert("Money Transferred");
     })
