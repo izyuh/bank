@@ -7,9 +7,7 @@ document.getElementsByTagName("title")[0].innerText = `Account - ${username}`;
 
 document.getElementById("welcome").innerText = `Welcome ${username}`;
 
-document.getElementById("balance").innerText = `Your Balance: ${parseFloat(
-  balance
-).toLocaleString("en-US", { style: "currency", currency: "USD" })}`;
+document.getElementById("account-balance").innerHTML = `Your Balance: <br> ${addBreaksAfterCommas(balance)}`;
 
 const amountInput = document.getElementById("amount");
 
@@ -62,11 +60,9 @@ document.getElementById("deposit").addEventListener("click", () => {
 
       sessionStorage.setItem("balance", data.balance);
       document.getElementById(
-        "balance"
-      ).innerText = `Your Balance: ${parseFloat(data.balance).toLocaleString(
-        "en-US",
-        { style: "currency", currency: "USD" }
-      )}`;
+        "account-balance"
+      ).innerHTML = `Your Balance: <br> ${addBreaksAfterCommas(balance)}`;
+
       document.getElementById("amount").value = "";
       loadingIcon[0].classList.add("hidden");
       alert("Money Deposited");
@@ -113,11 +109,10 @@ document.getElementById("withdraw").addEventListener("click", () => {
 
       sessionStorage.setItem("balance", data.balance);
       document.getElementById(
-        "balance"
-      ).innerText = `Your Balance: ${parseFloat(data.balance).toLocaleString(
-        "en-US",
-        { style: "currency", currency: "USD" }
-      )}`;
+        "account-balance"
+      ).innerHTML = `Your Balance: <br> ${addBreaksAfterCommas(balance)}`;
+
+
       loadingIcon[0].classList.add("hidden");
       document.getElementById("amount").value = "";
       alert("Money Withdrawn");
@@ -186,11 +181,8 @@ document.getElementById("transfer").addEventListener("click", () => {
       console.log("Transfer Success:", data);
       sessionStorage.setItem("balance", data.balance);
       document.getElementById(
-        "balance"
-      ).innerText = `Your Balance: ${parseFloat(data.balance).toLocaleString(
-        "en-US",
-        { style: "currency", currency: "USD" }
-      )}`;
+        "account-balance"
+      ).innerHTML = `Your Balance: <br> ${addBreaksAfterCommas(balance)}`;
       amountInput.value = "";
       alert("Money Transferred");
     })
@@ -209,3 +201,9 @@ document.getElementById("logout").addEventListener("click", () => {
   loadingIcon[0].classList.add("hidden");
   window.location.replace("../index.html");
 });
+
+
+// formats to us currency and then adds breaks after commas for wrapping purposes
+function addBreaksAfterCommas(text) {
+  return parseFloat(text).toLocaleString("en-US", {style: "currency", currency: "USD",}).replace(/,/g, ',&#8203;');
+}

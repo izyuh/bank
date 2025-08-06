@@ -7,14 +7,14 @@
 body {
   font-family: Arial, sans-serif;
   color: black;
-  font-size: 2em;
+  font-size: 15px;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
 }
 
 h1, h2 {
-  font-size: clamp(3rem, 6vw, 6rem);
+  font-size: clamp(3rem, 3vw, 8rem);
   margin: 0.2em;
 }
 
@@ -29,16 +29,38 @@ main {
 .actions {
   display: inherit;
   flex-direction: column;
-  width: 50%;
+  width: fit-content;
+  margin: 1em 0;
 }
 
 .actions #amount {
   width: 100%;
   margin: 0.5em 0;
   padding: 0.5em;
-  font-size: 1em;
-  border: 3px solid black;
+  font-size: 3em;
+  border: 3px solid black; 
+  text-align: center;
+  user-select: none;
 }
+
+.actions #amount:focus {
+  outline: none;
+  border-color: #0a9552;
+  
+}
+
+/* Hide the spinner for number inputs */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+/* */
 
 .actions #buttons {
   display: grid;
@@ -48,7 +70,7 @@ main {
 
 .actions #buttons button {
   padding: 0.5em;
-  font-size: 1em;
+  font-size: 3em;
   cursor: pointer;
   border-radius: 4px;
   background-color: #e80;
@@ -75,13 +97,19 @@ h1#welcome {
 h2#balance {
   text-align: center;
   margin-top: 10px;
+  word-break: break-all;
+}
+
+#account-balance {
+  word-break: break-word;
+  padding: 0 10px; /* Add some padding */
 }
 
 
-@media (max-width: 850px) {
+@media (max-width: 940px) {
 
   .actions #amount {
-    font-size: .8em;
+    font-size: 2em;
   }
 
   .actions #buttons  {
