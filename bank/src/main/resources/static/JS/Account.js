@@ -23,10 +23,9 @@ function numberWithCommas(x) {
 }
 
 
-
-
 /////////// ALL BANKING FUNCTIONS ///////////
 document.getElementById("deposit").addEventListener("click", () => {
+  disableButtons();
   const amount = parseFloat(amountInput.value); 
   if (isNaN(amount) || amount <= 0) {
     alert("Please enter a valid amount to deposit.");
@@ -66,15 +65,19 @@ document.getElementById("deposit").addEventListener("click", () => {
       document.getElementById("amount").value = "";
       loadingIcon[0].classList.add("hidden");
       alert("Money Deposited");
+      enableButtons();
     })
     .catch((error) => {
       console.error("Error during deposit:", error);
       loadingIcon[0].classList.add("hidden");
       alert("Failed to deposit. Please try again.");
+      enableButtons();
     });
+
 });
 
 document.getElementById("withdraw").addEventListener("click", () => {
+  disableButtons();
   loadingIcon[0].classList.remove("hidden");
   const amount = parseFloat(amountInput.value);
   if (isNaN(amount) || amount <= 0) {
@@ -116,11 +119,13 @@ document.getElementById("withdraw").addEventListener("click", () => {
       loadingIcon[0].classList.add("hidden");
       document.getElementById("amount").value = "";
       alert("Money Withdrawn");
+      enableButtons();
     })
     .catch((error) => {
       console.error("Error during Withdraw:", error);
       loadingIcon[0].classList.add("hidden");
       alert("Failed to Withdraw. Please try again.");
+      enableButtons();
     });
 });
 
@@ -131,6 +136,7 @@ document.getElementById(
 )}</b>`;
 
 document.getElementById("transfer").addEventListener("click", () => {
+  disableButtons();
   const amount = parseFloat(amountInput.value);
   if (
     isNaN(amount) ||
@@ -185,11 +191,13 @@ document.getElementById("transfer").addEventListener("click", () => {
       ).innerHTML = `Your Balance: <br> ${addBreaksAfterCommas(data.balance)}`;
       amountInput.value = "";
       alert("Money Transferred");
+      enableButtons();
     })
     .catch((error) => {
       console.error("Error during transfer:", error);
       loadingIcon[0].classList.add("hidden");
       alert("Failed to transfer. Please try again.");
+      enableButtons();
     });
 });
 
@@ -206,4 +214,18 @@ document.getElementById("logout").addEventListener("click", () => {
 // formats to us currency and then adds breaks after commas for wrapping purposes
 function addBreaksAfterCommas(text) {
   return parseFloat(text).toLocaleString("en-US", {style: "currency", currency: "USD",}).replace(/,/g, ',&#8203;');
+}
+
+function disableButtons() {
+  document.getElementById("deposit").disabled = true;
+  document.getElementById("withdraw").disabled = true;
+  document.getElementById("transfer").disabled = true;
+  amountInput.disabled = true;
+}
+
+function enableButtons() {
+  document.getElementById("deposit").disabled = false;
+  document.getElementById("withdraw").disabled = false;
+  document.getElementById("transfer").disabled = false;
+  amountInput.disabled = false;
 }
