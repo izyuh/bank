@@ -1,15 +1,44 @@
-let username = sessionStorage.getItem("CurrentUser");
-let balance = sessionStorage.getItem("balance");
+let username = "";
+let balance = 0;
+let accountNumber = "";
 
 const loadingIcon = document.getElementsByClassName("loader");
-
-document.getElementsByTagName("title")[0].innerText = `Account - ${username}`;
-
-document.getElementById("welcome").innerText = `Welcome ${username}`;
-
-document.getElementById("account-balance").innerHTML = `Your Balance: <br> ${addBreaksAfterCommas(balance)}`;
-
 const amountInput = document.getElementById("amount");
+
+// Fetch account data from backend on page load
+fetch("https://bank-7qbm.onrender.com/api/account", {
+  method: "GET",
+  headers: {
+    "Content-Type": "application/json",
+  }
+})
+.then((response) => {
+  if (!response.ok) {
+    throw new Error("Network response was not ok");
+  }
+  return response.json();
+})
+.then((data) => {
+  if (data.success) {
+    username = data.username;
+    balance = data.balance;
+    accountNumber = data.accountNumber;
+    
+    // Update UI with fetched data
+    document.getElementsByTagName("title")[0].innerText = `Account - ${username}`;
+    document.getElementById("welcome").innerText = `Welcome ${username}`;
+    document.getElementById("account-balance").innerHTML = `Your Balance: <br> ${addBreaksAfterCommas(balance)}`;
+    document.getElementById("accountNumber").innerHTML = `Account Number: <b>${accountNumber}</b>`;
+  } else {
+    alert("Session expired. Please login again.");
+    window.location.replace("../index.html");
+  }
+})
+.catch((error) => {
+  console.error("Error fetching account data:", error);
+  alert("Failed to load account data. Please login again.");
+  window.location.replace("../index.html");
+});
 
 amountInput.value = numberWithCommas(amountInput.value);
 
@@ -38,7 +67,6 @@ document.getElementById("deposit").addEventListener("click", () => {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      username: username,
       amount: amount,
     }),
   })
@@ -57,7 +85,7 @@ document.getElementById("deposit").addEventListener("click", () => {
       }
       console.log("Deposit Success:", data);
 
-      sessionStorage.setItem("balance", data.balance);
+      balance = data.balance;
       document.getElementById(
         "account-balance"
       ).innerHTML = `Your Balance: <br> ${addBreaksAfterCommas(data.balance)}`;
@@ -91,7 +119,6 @@ document.getElementById("withdraw").addEventListener("click", () => {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      username: username,
       amount: amount,
     }),
   })
@@ -110,7 +137,7 @@ document.getElementById("withdraw").addEventListener("click", () => {
       }
       console.log("Withdraw Success:", data);
 
-      sessionStorage.setItem("balance", data.balance);
+      balance = data.balance;
       document.getElementById(
         "account-balance"
       ).innerHTML = `Your Balance: <br> ${addBreaksAfterCommas(data.balance)}`;
@@ -129,11 +156,7 @@ document.getElementById("withdraw").addEventListener("click", () => {
     });
 });
 
-document.getElementById(
-  "accountNumber"
-).innerHTML = `Account Number: <b>${sessionStorage.getItem(
-  "accountNumber"
-)}</b>`;
+// Account number will be set when account data is fetched
 
 document.getElementById("transfer").addEventListener("click", () => {
   disableButtons();
@@ -141,7 +164,7 @@ document.getElementById("transfer").addEventListener("click", () => {
   if (
     isNaN(amount) ||
     amount <= 0 ||
-    amount > sessionStorage.getItem("balance")
+    amount > balance
   ) {
     alert("Please enter a valid amount to transfer.");
     loadingIcon[0].classList.add("hidden");
@@ -165,8 +188,7 @@ document.getElementById("transfer").addEventListener("click", () => {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      fromAccountNum: sessionStorage.getItem("accountNumber"),
-      toAccountNum: toAccountNum,
+      toAccountNumber: toAccountNum,
       amount: amount.toString(),
     }),
   })
@@ -185,7 +207,7 @@ document.getElementById("transfer").addEventListener("click", () => {
       }
       loadingIcon[0].classList.add("hidden");
       console.log("Transfer Success:", data);
-      sessionStorage.setItem("balance", data.balance);
+      balance = data.balance;
       document.getElementById(
         "account-balance"
       ).innerHTML = `Your Balance: <br> ${addBreaksAfterCommas(data.balance)}`;
@@ -203,9 +225,23 @@ document.getElementById("transfer").addEventListener("click", () => {
 
 document.getElementById("logout").addEventListener("click", () => {
   loadingIcon[0].classList.remove("hidden");
-  sessionStorage.removeItem("CurrentUser");
-  sessionStorage.removeItem("balance");
-  sessionStorage.removeItem("accountNumber");
+  fetch("https://bank-7qbm.onrender.com/api/logout", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    }
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      console.log("Logout successful");
+      window.location.href = "../index.html";
+    })
+    .catch((error) => {
+      console.error("Error during logout:", error);
+    });
+  sessionStorage.clear();
   loadingIcon[0].classList.add("hidden");
   window.location.replace("../index.html");
 });

@@ -3,6 +3,9 @@ package com.banking.bank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.banking.bank.repository.AccountRepository;
+
+import jakarta.servlet.http.HttpSession;
+
 import java.util.*;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
@@ -15,6 +18,9 @@ public class BankController {
 
     @Autowired
     private AccountRepository accountRepository;
+
+    @Autowired
+    private AccountService accountService;
 
     private static String hashPassword(String salt, String password) {
         try {
@@ -35,7 +41,7 @@ public class BankController {
     }
 
     @PostMapping("/login")
-    public Map<String, Object> login(@RequestBody Map<String, String> loginRequest) {
+    public Map<String, Object> login(@RequestBody Map<String, String> loginRequest, HttpSession session) {
         String username = loginRequest.get("username");
         String password = loginRequest.get("password");
 
@@ -53,11 +59,13 @@ public class BankController {
             // Compare hashed passwords
             if (hashedInputPassword.equals(account.getHashedPassword())) {
                 // Login successful
+
+                session.setAttribute("username", username);
+                session.setAttribute("accountNumber", account.getAccountNumber());
+
+
                 response.put("success", true);
                 response.put("message", "Login successful");
-                response.put("username", username);
-                response.put("balance", account.getBalance());
-                response.put("accountNumber", account.getAccountNumber());
             } else {
                 // Wrong password
                 response.put("success", false);
@@ -111,13 +119,13 @@ public class BankController {
     }
 
     @PostMapping("/deposit")
-    public Map<String, Object> deposit(@RequestBody Map<String, String> depositDetails) {
-        String username = depositDetails.get("username");
+    public Map<String, Object> deposit(@RequestBody Map<String, String> depositDetails, HttpSession session) {
         double amount = Double.parseDouble(depositDetails.get("amount"));
 
         Map<String, Object> response = new HashMap<>();
 
-        Optional<Account> accountOpt = accountRepository.findByUsername(username);
+        Optional<Account> accountOpt = accountService.getAccountFromSession(session);
+
         if (accountOpt.isPresent() && amount > 0) {
             Account account = accountOpt.get();
             account.addBalance(amount);
@@ -135,45 +143,41 @@ public class BankController {
     }
 
     @PostMapping("/withdraw")
-    public Map<String, Object> withdraw(@RequestBody Map<String, String> withdrawDetails) {
-        String username = withdrawDetails.get("username");
-        double amount = Double.parseDouble(withdrawDetails.get("amount"));
-
+    public Map<String, Object> withdraw(@RequestBody Map<String, String> withdrawDetails, HttpSession session) {
         Map<String, Object> response = new HashMap<>();
 
-        Optional<Account> accountOpt = accountRepository.findByUsername(username);
-        if (accountOpt.isPresent()) {
-            Account account = accountOpt.get();
-            try {
-                account.withdrawBalance(amount);
-                accountRepository.save(account);
+        Optional<Account> accountOpt = accountService.getAccountFromSession(session); // pass session here
 
-                response.put("success", true);
-                response.put("message", "Withdrawal successful");
-                response.put("balance", account.getBalance());
-            } catch (IllegalArgumentException e) {
-                response.put("success", false);
-                response.put("message", e.getMessage());
-                response.put("balance", account.getBalance());
-            }
-        } else {
+        
+
+        if (!accountOpt.isPresent()) {
             response.put("success", false);
-            response.put("message", "Account not found");
+            response.put("message", "User not logged in or account not found");
+            return response;
         }
 
+        Account account = accountOpt.get();
+        double amount = Double.parseDouble(withdrawDetails.get("amount"));
+        try {
+            account.withdrawBalance(amount);
+            accountRepository.save(account);
+            response.put("success", true);
+            response.put("message", "Withdrawal successful");
+            response.put("balance", account.getBalance());
+        } catch (IllegalArgumentException e) {
+            response.put("success", false);
+            response.put("message", e.getMessage());
+        }
         return response;
     }
 
     @PostMapping("/transfer")
-    public Map<String, Object> transfer(@RequestBody Map<String, String> transferDetails) {
-        String fromAccountNumber = transferDetails.get("fromAccountNum");
-        String toAccountNumber = transferDetails.get("toAccountNum");
+    public Map<String, Object> transfer(@RequestBody Map<String, String> transferDetails, HttpSession session) {
         double amount = Double.parseDouble(transferDetails.get("amount"));
 
         Map<String, Object> response = new HashMap<>();
-
-        Optional<Account> fromAccountOpt = accountRepository.findByAccountNumber(fromAccountNumber);
-        Optional<Account> toAccountOpt = accountRepository.findByAccountNumber(toAccountNumber);
+        Optional<Account> fromAccountOpt = accountService.getAccountFromSession(session);
+        Optional<Account> toAccountOpt = accountRepository.findByAccountNumber(transferDetails.get("toAccountNumber"));
 
         if (fromAccountOpt.isPresent() && toAccountOpt.isPresent()) {
             Account fromAccount = fromAccountOpt.get();
@@ -192,7 +196,6 @@ public class BankController {
             } catch (IllegalArgumentException e) {
                 response.put("success", false);
                 response.put("message", e.getMessage());
-                response.put("balance", fromAccount.getBalance());
             }
         } else {
             response.put("success", false);
@@ -201,4 +204,29 @@ public class BankController {
 
         return response;
     }
+
+    @GetMapping("/account")
+    public Map<String, Object> getAccount(HttpSession session) {
+        Map<String, Object> response = new HashMap<>();
+        Optional<Account> accountOpt = accountService.getAccountFromSession(session);
+        
+        if (accountOpt.isPresent()) {
+            Account account = accountOpt.get();
+            response.put("success", true);
+            response.put("username", account.getUsername());
+            response.put("balance", account.getBalance());
+            response.put("accountNumber", account.getAccountNumber());
+        } else {
+            response.put("success", false);
+            response.put("message", "No account found in session");
+        }
+        
+        return response;
+    }
+
+        @PostMapping("/logout")
+    public void logout(HttpSession session) {
+        session.invalidate();
+    }
 }
+
