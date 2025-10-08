@@ -13,7 +13,7 @@ import java.nio.charset.StandardCharsets;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = {"https://izyuh.netlify.app/"},
+@CrossOrigin(origins = {"https://izyuh.netlify.app"},
              allowCredentials = "true")
 public class BankController {
 

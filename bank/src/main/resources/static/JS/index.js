@@ -6,7 +6,6 @@ document.getElementById("loginForm").addEventListener("submit", (e) => {
 
   const loadingIcon = document.getElementsByClassName("loader");
 
-  console.log("Login submitted for:", username);
   loadingIcon[0].classList.remove("hidden");
 
   fetch("https://bank-7qbm.onrender.com/api/login", {
