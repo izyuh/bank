@@ -8,6 +8,7 @@ const amountInput = document.getElementById("amount");
 // Fetch account data from backend on page load
 fetch("https://bank-7qbm.onrender.com/api/account", {
   method: "GET",
+  credentials: "include", 
   headers: {
     "Content-Type": "application/json",
   }
@@ -23,6 +24,8 @@ fetch("https://bank-7qbm.onrender.com/api/account", {
     username = data.username;
     balance = data.balance;
     accountNumber = data.accountNumber;
+
+    console.log("Fetched account data:", data); //testing purposes
     
     // Update UI with fetched data
     document.getElementsByTagName("title")[0].innerText = `Account - ${username}`;
@@ -63,6 +66,7 @@ document.getElementById("deposit").addEventListener("click", () => {
   }
   fetch("https://bank-7qbm.onrender.com/api/deposit", {
     method: "POST",
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },
@@ -115,6 +119,7 @@ document.getElementById("withdraw").addEventListener("click", () => {
   loadingIcon[0].classList.remove("hidden");
   fetch("https://bank-7qbm.onrender.com/api/withdraw", {
     method: "POST",
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },
@@ -184,6 +189,7 @@ document.getElementById("transfer").addEventListener("click", () => {
   loadingIcon[0].classList.remove("hidden");
   fetch("https://bank-7qbm.onrender.com/api/transfer", {
     method: "POST",
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },
@@ -227,6 +233,7 @@ document.getElementById("logout").addEventListener("click", () => {
   loadingIcon[0].classList.remove("hidden");
   fetch("https://bank-7qbm.onrender.com/api/logout", {
     method: "POST",
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
     }
@@ -241,7 +248,6 @@ document.getElementById("logout").addEventListener("click", () => {
     .catch((error) => {
       console.error("Error during logout:", error);
     });
-  sessionStorage.clear();
   loadingIcon[0].classList.add("hidden");
   window.location.replace("../index.html");
 });

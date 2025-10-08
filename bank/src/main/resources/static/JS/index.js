@@ -11,6 +11,7 @@ document.getElementById("loginForm").addEventListener("submit", (e) => {
 
   fetch("https://bank-7qbm.onrender.com/api/login", {
     method: "POST",
+    credentials: "include", 
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       username: username,
@@ -31,10 +32,6 @@ document.getElementById("loginForm").addEventListener("submit", (e) => {
         resultElement.style.visibility = "visible";
         resultElement.innerText = data.message;
       } else if (data.success) {
-        sessionStorage.setItem("CurrentUser", data.username);
-        sessionStorage.setItem("balance", data.balance);
-        sessionStorage.setItem("accountNumber", data.accountNumber);
-
         document.getElementById("username").value = "";
         document.getElementById("password").value = "";
 
