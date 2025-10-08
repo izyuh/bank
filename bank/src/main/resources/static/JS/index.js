@@ -1,3 +1,26 @@
+// Check if user is already logged in
+fetch("https://bank-7qbm.onrender.com/api/account", {
+  method: "GET",
+  credentials: "include",
+  headers: {
+    "Content-Type": "application/json",
+  }
+})
+.then((response) => {
+  if (response.ok) {
+    return response.json();
+  }
+})
+.then((data) => {
+  if (data && data.success) {
+    // User is already logged in, redirect to account page
+    window.location.href = "HTML/Account.html";
+  }
+})
+.catch(() => {
+  // Not logged in, stay on login page
+});
+
 document.getElementById("loginForm").addEventListener("submit", (e) => {
   e.preventDefault();
 
