@@ -61,6 +61,10 @@ public class BankController {
             if (hashedInputPassword.equals(account.getHashedPassword())) {
                 // Login successful
 
+                System.out.println("Login successful for user: " + username);
+                System.out.println("Session ID: " + session.getId());
+                System.out.println(account.getAccountNumber());
+
                 session.setAttribute("username", username);
                 session.setAttribute("accountNumber", account.getAccountNumber());
 
