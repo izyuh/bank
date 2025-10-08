@@ -8,59 +8,58 @@ const amountInput = document.getElementById("amount");
 // Fetch account data from backend on page load
 fetch("https://bank-7qbm.onrender.com/api/account", {
   method: "GET",
-  credentials: "include", 
+  credentials: "include",
   headers: {
     "Content-Type": "application/json",
-  }
+  },
 })
-.then((response) => {
-  if (!response.ok) {
-    throw new Error("Network response was not ok");
-  }
-  return response.json();
-})
-.then((data) => {
-  console.log("Full response from /api/account:", data); // See what backend returns
-  
-  if (data.success) {
-    username = data.username;
-    balance = data.balance;
-    accountNumber = data.accountNumber;
+  .then((response) => {
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+    return response.json();
+  })
+  .then((data) => {
+    if (data.success) {
+      username = data.username;
+      balance = data.balance;
+      accountNumber = data.accountNumber;
 
-    console.log("Fetched account data:", data); //testing purposes
-    
-    // Update UI with fetched data
-    document.getElementsByTagName("title")[0].innerText = `Account - ${username}`;
-    document.getElementById("welcome").innerText = `Welcome ${username}`;
-    document.getElementById("account-balance").innerHTML = `Your Balance: <br> ${addBreaksAfterCommas(balance)}`;
-    document.getElementById("accountNumber").innerHTML = `Account Number: <b>${accountNumber}</b>`;
-  } else {
-    alert("Session expired. Please login again.");
+      // Update UI with fetched data
+      document.getElementsByTagName(
+        "title"
+      )[0].innerText = `Account - ${username}`;
+      document.getElementById("welcome").innerText = `Welcome ${username}`;
+      document.getElementById(
+        "account-balance"
+      ).innerHTML = `Your Balance: <br> ${addBreaksAfterCommas(balance)}`;
+      document.getElementById(
+        "accountNumber"
+      ).innerHTML = `Account Number: <b>${accountNumber}</b>`;
+    } else {
+      alert("Session expired. Please login again.");
+      window.location.replace("../index.html");
+    }
+  })
+  .catch((error) => {
+    console.error("Error fetching account data:", error);
+    alert("Failed to load account data. Please login again.");
     window.location.replace("../index.html");
-  }
-})
-.catch((error) => {
-  console.error("Error fetching account data:", error);
-  alert("Failed to load account data. Please login again.");
-  window.location.replace("../index.html");
-});
+  });
 
 amountInput.value = numberWithCommas(amountInput.value);
 
-
 function numberWithCommas(x) {
-    x = x.toString();
-    var pattern = /(-?\d+)(\d{3})/;
-    while (pattern.test(x))
-        x = x.replace(pattern, "$1,$2");
-    return x;
+  x = x.toString();
+  var pattern = /(-?\d+)(\d{3})/;
+  while (pattern.test(x)) x = x.replace(pattern, "$1,$2");
+  return x;
 }
-
 
 /////////// ALL BANKING FUNCTIONS ///////////
 document.getElementById("deposit").addEventListener("click", () => {
   disableButtons();
-  const amount = parseFloat(amountInput.value); 
+  const amount = parseFloat(amountInput.value);
   if (isNaN(amount) || amount <= 0) {
     alert("Please enter a valid amount to deposit.");
     loadingIcon[0].classList.add("hidden");
@@ -107,7 +106,6 @@ document.getElementById("deposit").addEventListener("click", () => {
       alert("Failed to deposit. Please try again.");
       enableButtons();
     });
-
 });
 
 document.getElementById("withdraw").addEventListener("click", () => {
@@ -149,7 +147,6 @@ document.getElementById("withdraw").addEventListener("click", () => {
         "account-balance"
       ).innerHTML = `Your Balance: <br> ${addBreaksAfterCommas(data.balance)}`;
 
-
       loadingIcon[0].classList.add("hidden");
       document.getElementById("amount").value = "";
       alert("Money Withdrawn");
@@ -168,11 +165,7 @@ document.getElementById("withdraw").addEventListener("click", () => {
 document.getElementById("transfer").addEventListener("click", () => {
   disableButtons();
   const amount = parseFloat(amountInput.value);
-  if (
-    isNaN(amount) ||
-    amount <= 0 ||
-    amount > balance
-  ) {
+  if (isNaN(amount) || amount <= 0 || amount > balance) {
     alert("Please enter a valid amount to transfer.");
     loadingIcon[0].classList.add("hidden");
     return;
@@ -184,7 +177,7 @@ document.getElementById("transfer").addEventListener("click", () => {
 
   if (!toAccountNum || toAccountNum.length !== 9) {
     alert("Please enter a valid 9-digit account number.");
-    amountInput.value = ""; 
+    amountInput.value = "";
     return;
   }
 
@@ -238,7 +231,7 @@ document.getElementById("logout").addEventListener("click", () => {
     credentials: "include",
     headers: {
       "Content-Type": "application/json",
-    }
+    },
   })
     .then((response) => {
       if (!response.ok) {
@@ -254,10 +247,11 @@ document.getElementById("logout").addEventListener("click", () => {
   window.location.replace("../index.html");
 });
 
-
 // formats to us currency and then adds breaks after commas for wrapping purposes
 function addBreaksAfterCommas(text) {
-  return parseFloat(text).toLocaleString("en-US", {style: "currency", currency: "USD",}).replace(/,/g, ',&#8203;');
+  return parseFloat(text)
+    .toLocaleString("en-US", { style: "currency", currency: "USD" })
+    .replace(/,/g, ",&#8203;");
 }
 
 function disableButtons() {
