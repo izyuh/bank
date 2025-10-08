@@ -20,6 +20,8 @@ fetch("https://bank-7qbm.onrender.com/api/account", {
   return response.json();
 })
 .then((data) => {
+  console.log("Full response from /api/account:", data); // See what backend returns
+  
   if (data.success) {
     username = data.username;
     balance = data.balance;
